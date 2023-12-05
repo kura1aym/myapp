@@ -1,0 +1,25 @@
+version: '3.0'
+
+services:
+  web:
+    build: ./your-flask-app
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URI: sqlite:///note_db.db
+    networks:
+      - your-network
+
+  web-viewer:
+    image: nginx:alpine
+    volumes:
+      - ./your-flask-app/templates:/usr/share/nginx/html:ro
+      - ./your-flask-app/templates/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "8001:80"
+    networks:
+      - your-network
+
+networks:
+  your-network:
+    driver: bridge
